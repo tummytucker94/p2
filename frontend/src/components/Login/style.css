@@ -1,0 +1,22 @@
+.wrapper{
+    background-color: #fff;
+    border: 10px solid firebrick;
+    border-radius: 10px;
+    padding: 30px;
+    margin-top: 100px;
+    box-shadow: 3px 5px 7px;
+}
+
+#loginHeading{
+    text-align: center;
+}
+
+#loginForm{
+    clear: both;
+}
+
+.errorMsg{
+    color: red;
+    padding-top: 5px;
+    text-align: center;
+}

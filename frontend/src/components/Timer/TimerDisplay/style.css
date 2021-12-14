@@ -1,0 +1,9 @@
+.timer-text{
+    font-size: 200px;
+}
+
+.timer-display-container{
+    background-color: white;
+    border: 4px solid firebrick;
+    border-radius: 20px;
+}

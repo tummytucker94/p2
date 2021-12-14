@@ -1,0 +1,9 @@
+#my-footer{
+    box-sizing: border-box;
+    padding-top: 10px;
+    border-top: 2px solid white;
+    min-height: 100px;
+    background-color: firebrick;
+    color: black;
+    text-align: center;
+}

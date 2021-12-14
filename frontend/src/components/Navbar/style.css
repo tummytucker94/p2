@@ -1,0 +1,14 @@
+#my-nav-bar{
+    background-color: firebrick;
+    border-bottom: 2px solid white;
+}
+
+#my-nav-bar a{
+    padding: 10px;
+    text-align: center;
+    color:black;
+}
+
+#logout-btn{
+    float: right;
+}

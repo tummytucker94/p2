@@ -1,0 +1,9 @@
+#stats-container{
+    color: white;
+}
+
+#graph-container{
+    border: 1px solid white;
+    min-height: 200px;
+    padding: 50px;
+}
