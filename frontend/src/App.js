@@ -6,6 +6,8 @@ import LandingPage from './pages/LandingPage';
 import RegisterPage from './pages/RegisterPage';
 import AboutPage from './pages/AboutPage';
 import StatsPage from './pages/StatsPage';
+import TemplatePage from './pages/TemplatePage';
+import EditorPage from './pages/EditorPage';
 
 
 function App() {
@@ -19,6 +21,8 @@ function App() {
         <Route path='/timer' element={<TimerPage />} />
         <Route path='/about' element={<AboutPage />} />
         <Route path="/stats" element={<StatsPage />} />
+        <Route path="/templates" element={<TemplatePage />} />
+        <Route path="/editor" element={<EditorPage />} />
       </Routes>
     </Router>
     </div>

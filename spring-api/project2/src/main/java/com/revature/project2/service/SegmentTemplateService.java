@@ -13,4 +13,5 @@ public interface SegmentTemplateService {
     SegmentTemplate getSegmentTemplateById(Long id);
     List<SegmentTemplate> getAllSegmentTemplates();
     List<SegmentTemplate> getSegmentTemplatesBySession(SessionTemplate sessionTemplate);
+    List<SegmentTemplate> getAllOrderByPosition();
 }

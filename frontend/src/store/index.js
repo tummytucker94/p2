@@ -19,9 +19,24 @@ const initialState = {
     sessionOver: false,
     timeRemaining: 10,
     currSession: {
-        goalTimes: [10, 10, 10],
-        goalNames: ['Focus', 'Break', 'Focus'],
-        isBreak: [false, true, false],
+        segments: [
+            {   
+                segmentName: 'Focus',
+                segmentLength: 10,
+                break: false
+            },
+            {
+                segmentName: 'Break',
+                segmentLength: 10,
+                break: true
+            },
+            {
+                segmentName: 'Focus',
+                segmentLength: 10,
+                break: false
+            }
+        ],
+
         sessionStage: 0
     }
 }
@@ -57,36 +72,56 @@ const productivityReducer = (state = initialState, action) => {
         }
     }
 
-    if (action.type === 'genCurrSession') {
+    if(action.type === 'genCurrSession'){
         var breakLength = (action.overallTime - action.focusTime) / action.numBreaks;
         var focusLength = action.focusTime / (parseInt(action.numBreaks) + 1);
         var sessionTemplate = {
-            goalTimes: [],
-            goalNames: [],
-            isBreak: [],
+            segments: [],
             sessionStage: 0
         }
 
         for (var i = 0; i < action.numBreaks; i++) {
-            sessionTemplate.goalTimes.push(focusLength);
-            sessionTemplate.goalNames.push("Focus");
-            sessionTemplate.isBreak.push(false);
-            sessionTemplate.goalTimes.push(breakLength);
-            sessionTemplate.goalNames.push("Break");
-            sessionTemplate.isBreak.push(true);
+            let focusSegment = {
+                segmentName: 'Focus',
+                segmentLength: focusLength,
+                break: false
+            };
+
+            let breakSegment = {
+                segmentName: 'Break',
+                segmentLength: breakLength,
+                break:true
+            };
+            sessionTemplate.segments.push(focusSegment);
+            sessionTemplate.segments.push(breakSegment);
         }
 
-        sessionTemplate.goalTimes.push(focusLength);
-        sessionTemplate.goalNames.push("Focus");
-        sessionTemplate.isBreak.push(false);
+        let lastSegment = {
+            segmentName: 'Focus',
+            segmentLength: focusLength,
+            break: false
+        };
+
+        sessionTemplate.segments.push(lastSegment);
 
         return {
+                    ...state,
+                    currSession: {
+                        segments: sessionTemplate.segments,
+                        sessionStage: sessionTemplate.sessionStage
+                    },
+                    sessionOver: false
+                }
+
+    }
+
+    if(action.type === 'useTemplate'){
+        return{
             ...state,
+            timeRemaining: action.payload[0].segmentLength,
             currSession: {
-                goalTimes: sessionTemplate.goalTimes,
-                goalNames: sessionTemplate.goalNames,
-                isBreak: sessionTemplate.isBreak,
-                sessionStage: sessionTemplate.sessionStage
+                segments: action.payload,
+                sessionStage: 0
             },
             sessionOver: false
         }

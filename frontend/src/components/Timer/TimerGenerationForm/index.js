@@ -47,11 +47,10 @@ const TimerGenerationForm = () => {
         return timeInSeconds;
     }
 
-
     function setUpSession() {
         dispatch({ type: 'genCurrSession', overallTime: overallTime, focusTime: focusTime, numBreaks: sessionInput.numBreaks });
         console.log("", store.getState().currSession);
-        dispatch({ type: 'setTimeRemaining', payload: store.getState().currSession.goalTimes[store.getState().currSession.sessionStage] });
+        dispatch({ type: 'setTimeRemaining', payload: store.getState().currSession.segments[store.getState().currSession.sessionStage].segmentLength });
     }
 
     return (

@@ -30,7 +30,8 @@ const TimerDisplay = () => {
         <div className="container mt-5">
             <div className="timer-display-container">
                 {displayText}
-                <h3 className="mb-3">{currSession.goalNames[currSession.sessionStage]}</h3>
+                <h3 className="mb-3">{currSession.segments[currSession.sessionStage].segmentName}</h3>
+                <h3 className='"mb-3'>Segment: {currSession.sessionStage + 1} / {currSession.segments.length}</h3>
             </div>
         </div>
     )

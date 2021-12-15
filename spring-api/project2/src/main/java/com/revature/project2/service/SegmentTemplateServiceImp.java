@@ -39,8 +39,15 @@ public class SegmentTemplateServiceImp implements SegmentTemplateService{
         return repository.findAll();
     }
 
+
+
     @Override
     public List<SegmentTemplate> getSegmentTemplatesBySession(SessionTemplate sessionTemplate) {
         return repository.findAllBySessionTemplateOrderBySegmentPosition(sessionTemplate);
+    }
+
+    @Override
+    public List<SegmentTemplate> getAllOrderByPosition() {
+        return repository.findAllByOrderBySegmentPositionAsc();
     }
 }

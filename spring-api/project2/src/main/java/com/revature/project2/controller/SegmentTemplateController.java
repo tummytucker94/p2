@@ -16,7 +16,7 @@ public class SegmentTemplateController {
 
     @GetMapping("/segment_templates")
     public List<SegmentTemplate> getSegmentTemplates(){
-        return service.getAllSegmentTemplates();
+        return service.getAllOrderByPosition();
     }
 
     @PostMapping("/segment_templates")

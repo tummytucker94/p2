@@ -47,24 +47,24 @@ const TimerControls = () => {
     useEffect(() => {
         if (timeRemaining < 1) {
             clearInterval(intervalId);
-            var length = store.getState().currSession.goalTimes.length;
+            var length = store.getState().currSession.segments.length;
             if (store.getState().currSession.sessionStage + 1 < length) {
                 //more stages to complete
-                if(!currSession.isBreak[store.getState().currSession.sessionStage])
+                if(!currSession.segments[store.getState().currSession.sessionStage].break)
                     setShow(true);
                 dispatch({ type: 'goToNextStage' });
                 console.log("Store stage: ", store.getState().currSession.sessionStage);
                 console.log("Now on stage: ", currSession.sessionStage);
-                dispatch({ type: 'setTimeRemaining', payload: currSession.goalTimes[store.getState().currSession.sessionStage] });
+                dispatch({ type: 'setTimeRemaining', payload: currSession.segments[store.getState().currSession.sessionStage].segmentLength });
             } else {
                 //finished session
                 var focusSum = 0;
                 var breakSum = 0;
                 for(var i = 0; i < length; i++){
-                    if(currSession.isBreak[i]){
-                        breakSum += currSession.goalTimes[i];
+                    if(currSession.segments[i].break){
+                        breakSum += currSession.segments[i].segmentLength;
                     } else {
-                        focusSum += currSession.goalTimes[i];
+                        focusSum += currSession.segments[i].segmentLength;
                     }
                 }
                 dispatch({type: 'updateUserStats', numSegments: length, focusTime: focusSum, breakTime: breakSum});
@@ -77,7 +77,7 @@ const TimerControls = () => {
                 console.log("Session Over!");
             }
         }
-    }, [timeRemaining, intervalId, dispatch, currSession.sessionStage, currSession.goalTimes])
+    }, [timeRemaining, intervalId, dispatch, currSession.sessionStage, currSession.segments])
 
     return (
         <div>

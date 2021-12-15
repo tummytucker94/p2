@@ -1,0 +1,22 @@
+#template-list-container{
+    padding-top: 10px;
+    color: white;
+}
+
+#template-table{
+    border-radius: 10px;
+}
+
+.break{
+    padding: 3px;
+    color: black;
+    border: 1px solid black;
+    background-color: firebrick;
+}
+
+.not-break{
+    padding: 3px;
+    color: black;
+    border: 1px solid black;
+    background-color: green;
+}
