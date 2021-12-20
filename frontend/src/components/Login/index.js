@@ -42,6 +42,9 @@ const Login = () => {
                     } else {
                     var user = response.data;
                     console.log(response);
+                    localStorage.setItem('userId', user.userId);
+                    localStorage.setItem('firstName', user.firstName);
+                    localStorage.setItem('lastName', user.lastName);
                     dispatch({ type: 'logIn', payload: user});
                     navigate('/landing');
                     }

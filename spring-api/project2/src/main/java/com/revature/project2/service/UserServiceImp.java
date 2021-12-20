@@ -43,6 +43,18 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
+    public User updateUserStats(Long id, User user) {
+        User userdb = repository.findById(id).get();
+        userdb.setFocusTime(user.getFocusTime());
+        userdb.setBreakTime(user.getBreakTime());
+        userdb.setSegmentsCompleted(user.getSegmentsCompleted());
+        userdb.setSegmentsNotCompleted(user.getSegmentsNotCompleted());
+        userdb.setSessionsCompleted(user.getSessionsCompleted());
+        return repository.save(userdb);
+    }
+
+
+    @Override
     public User getUserFromCredentials(User user) {
         return repository.findByEmailAndPassword(user.getEmail(), user.getPassword());
     }

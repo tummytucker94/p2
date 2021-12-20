@@ -33,6 +33,9 @@ public class UserController {
         return service.updateUser(id, user);
     }
 
+    @PutMapping("/users/{id}/stats")
+    public User updateUserStats(@PathVariable Long id, @RequestBody User user){return service.updateUserStats(id, user);}
+
     @PostMapping("/users/login")
     public User getUserFromCredentials(@RequestBody User user){
         return service.getUserFromCredentials(user);

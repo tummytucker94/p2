@@ -11,5 +11,6 @@ public interface UserService {
     User getUserById(Long id);
     User saveUser(User user);
     User updateUser(Long id, User user);
+    User updateUserStats(Long id, User user);
     User getUserFromCredentials(User user);
 }

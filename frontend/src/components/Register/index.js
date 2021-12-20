@@ -1,8 +1,13 @@
-import React , {useState} from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
+import { Modal, Button } from 'react-bootstrap';
 import './style.css'
+import { useNavigate } from 'react-router';
+import { error } from 'jquery';
 
 const Register = () => {
+    const navigate = useNavigate();
+    const [show, setShow] = useState(false);
     const [user, setUser] = useState({
         firstName: '',
         lastName: '',
@@ -15,7 +20,7 @@ const Register = () => {
         passwordError: '',
         firstNameError: '',
         lastNameError: ''
-    })
+    });
 
     function onChangeHandler(e) {
         setUser({
@@ -24,15 +29,71 @@ const Register = () => {
         })
     }
 
-    function onSubmitHandler(e){
+    function onSubmitHandler(e) {
         e.preventDefault();
-        console.log(user);
-        axios.post("http://localhost:9001/users", user)
-             .then(response => {
-                 console.log(response.data);
-                 window.location = "/"
-            })
-              .catch(error => {console.error(error)})
+        if (validateInput()) {
+            axios.post("http://localhost:9001/users", user)
+                .then(response => {
+                    console.log(response.data);
+                    setShow(true);
+                })
+                .catch(error => {
+                    console.error(error);
+
+                })
+        }
+    }
+
+    function validateInput() {
+        let emailValid = false;
+        let passwordValid = false;
+        let firstNameValid = false;
+        let lastNameValid = false;
+
+        let emailErrorMsg = '';
+        let passwordErrorMsg = '';
+        let firstNameErrorMsg = '';
+        let lastNameErrorMsg = '';
+ 
+
+        if (user.email === '') {
+            emailErrorMsg = 'Email required'
+        } else {
+            emailValid = true;
+        }
+
+        if(user.password === ''){
+            passwordErrorMsg = 'Password required'
+        } else {
+            passwordValid = true;
+        }
+
+        if(user.firstName === ''){
+            firstNameErrorMsg = 'First name required'
+        } else {
+            firstNameValid = true;
+        }
+
+        if(user.lastName === ''){
+            lastNameErrorMsg = 'Last name required'
+        } else {
+            lastNameValid = true;
+        }
+
+        setErrorMessage({
+            ...errorMessage,
+            emailError: emailErrorMsg,
+            passwordError: passwordErrorMsg,
+            firstNameError: firstNameErrorMsg,
+            lastNameError: lastNameErrorMsg
+        });
+
+        return (emailValid && passwordValid && firstNameValid && lastNameValid);
+    }
+
+    function onClickHandler(e) {
+        setShow(false);
+        navigate("/");
     }
 
     return (
@@ -41,7 +102,7 @@ const Register = () => {
             <form method="post" onSubmit={onSubmitHandler}>
                 <div className="form-group mb-3">
                     <label class="form-label" htmlFor="">Email</label>
-                    <input type="text" className="form-control" name="email" value={user.email} onChange={onChangeHandler} />
+                    <input type="email" className="form-control" name="email" value={user.email} onChange={onChangeHandler} />
                     <span className="text-danger">{errorMessage.emailError}</span>
                 </div>
                 <div className="form-group mb-3">
@@ -63,6 +124,17 @@ const Register = () => {
                     <input type="submit" value="Register" className="btn btn-primary btn-lg" />
                 </div>
             </form>
+            <Modal show={show}>
+                <Modal.Header>
+                    <Modal.Title>Registered Successfully</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>Your new account has been created!</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" className='btn btn-success' onClick={onClickHandler}>Back to Login</Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 }

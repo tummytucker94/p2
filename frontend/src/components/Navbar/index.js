@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 const Navbar = () => {
 
   function logoutHandler(){
+    localStorage.clear();
     window.location = "/";
   }
 

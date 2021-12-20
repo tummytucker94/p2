@@ -11,8 +11,18 @@ const TimerControls = () => {
     const intervalId = useSelector(state => state.intervalId);
     const currSession = useSelector(state => state.currSession);
     const timeRemaining = useSelector(state => state.timeRemaining);
-    const currUser = useSelector(state => state.currUser)
     const [show, setShow] = useState(false);
+    const [currUser, setcurrUser] = useState({});
+
+    useEffect(() => {
+        //retrieve user data
+        let url = "http://localhost:9001/users/" + localStorage.getItem('userId');
+        axios.get(url)
+            .then(response => {
+                setcurrUser(response.data);
+            })
+            .catch(error => console.error(error));
+    }, [])
 
     function startHandler(event) {
         if (intervalId == null) {
@@ -40,7 +50,37 @@ const TimerControls = () => {
         dispatch({ type: 'completeTimer' });
     }
 
-    function modalCloseHandler() {
+    function segmentCompleteHandler() {
+        //update user stats
+        var url = "http://localhost:9001/users/" + currUser.userId + "/stats";
+        axios.put(url, {
+            "focusTime": currUser.focusTime,
+            "breakTime": currUser.breakTime,
+            "segmentsCompleted": currUser.segmentsCompleted + 1,
+            "segmentsNotCompleted": currUser.segmentsNotCompleted,
+            "sessionsCompleted": currUser.sessionsCompleted
+        })
+            .then(response => {
+                setcurrUser(response.data);
+            })
+            .catch(error => { console.error(error) });
+        setShow(false);
+    }
+
+    function segmentNotCompleteHandler() {
+        //update user stats
+        var url = "http://localhost:9001/users/" + currUser.userId + "/stats";
+        axios.put(url, {
+            "focusTime": currUser.focusTime,
+            "breakTime": currUser.breakTime,
+            "segmentsCompleted": currUser.segmentsCompleted,
+            "segmentsNotCompleted": currUser.segmentsNotCompleted + 1,
+            "sessionsCompleted": currUser.sessionsCompleted
+        })
+            .then(response => {
+                setcurrUser(response.data);
+            })
+            .catch(error => { console.error(error) });
         setShow(false);
     }
 
@@ -50,29 +90,42 @@ const TimerControls = () => {
             var length = store.getState().currSession.segments.length;
             if (store.getState().currSession.sessionStage + 1 < length) {
                 //more stages to complete
-                if(!currSession.segments[store.getState().currSession.sessionStage].break)
+                if (!currSession.segments[store.getState().currSession.sessionStage].break)
                     setShow(true);
                 dispatch({ type: 'goToNextStage' });
                 console.log("Store stage: ", store.getState().currSession.sessionStage);
                 console.log("Now on stage: ", currSession.sessionStage);
                 dispatch({ type: 'setTimeRemaining', payload: currSession.segments[store.getState().currSession.sessionStage].segmentLength });
             } else {
+                //show modal if last segment was not break
+                if(!currSession.segments[currSession.sessionStage].break)
+                    setShow(true);
+
                 //finished session
                 var focusSum = 0;
                 var breakSum = 0;
-                for(var i = 0; i < length; i++){
-                    if(currSession.segments[i].break){
+                for (var i = 0; i < length; i++) {
+                    if (currSession.segments[i].break) {
                         breakSum += currSession.segments[i].segmentLength;
                     } else {
                         focusSum += currSession.segments[i].segmentLength;
                     }
                 }
-                dispatch({type: 'updateUserStats', numSegments: length, focusTime: focusSum, breakTime: breakSum});
-                var url = "http://localhost:9001/users/" + currUser.userId;
-                axios.put(url, store.getState().currUser)
-                    .then(response => {console.log("Response Update Stats: ",response.data)})
-                    .catch(error => {console.error(error)});
-                
+                //update user stats
+                var url = "http://localhost:9001/users/" + currUser.userId + "/stats";
+                axios.put(url, {
+                    "focusTime": currUser.focusTime + focusSum,
+                    "breakTime": currUser.breakTime + breakSum,
+                    "segmentsCompleted": currUser.segmentsCompleted,
+                    "segmentsNotCompleted": currUser.segmentsNotCompleted,
+                    "sessionsCompleted": currUser.sessionsCompleted + 1
+                })
+                    .then(response => {
+                        console.log("Response Update Stats: ", response.data);
+                        setcurrUser(response.data);
+                    })
+                    .catch(error => { console.error(error) });
+
                 dispatch({ type: 'setSessionOver', payload: true });
                 console.log("Session Over!");
             }
@@ -93,8 +146,8 @@ const TimerControls = () => {
                     <p>Placeholder for info on segment that was just completed</p>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" className='btn btn-success' onClick={modalCloseHandler}>Completed goal</Button>
-                    <Button variant="secondary" className='btn btn-danger' onClick={modalCloseHandler}>Did not complete goal</Button>
+                    <Button variant="secondary" className='btn btn-success' onClick={segmentCompleteHandler}>Completed goal</Button>
+                    <Button variant="secondary" className='btn btn-danger' onClick={segmentNotCompleteHandler}>Did not complete goal</Button>
                 </Modal.Footer>
             </Modal>
         </div>

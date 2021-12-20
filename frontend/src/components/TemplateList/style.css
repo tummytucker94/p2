@@ -7,16 +7,35 @@
     border-radius: 10px;
 }
 
+#filterInput{
+    margin-right: 10px;
+    float: right;
+}
+
+#userFilterBtn{
+    float: left;
+    margin-left: 10px;
+}
+
+.table th {
+    border-top: 0px;
+}
+
+.table thead th {
+    border-bottom: 0px;
+}
+
 .break{
     padding: 3px;
     color: black;
     border: 1px solid black;
-    background-color: firebrick;
+    background-color: salmon;
 }
 
 .not-break{
     padding: 3px;
     color: black;
     border: 1px solid black;
-    background-color: green;
+    background-color: lightgreen;
 }
+

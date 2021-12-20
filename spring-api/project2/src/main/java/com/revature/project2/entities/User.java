@@ -1,5 +1,6 @@
 package com.revature.project2.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +13,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(
         name = "user",
         uniqueConstraints = @UniqueConstraint(
@@ -56,7 +58,7 @@ public class User {
     )
     private String password;
 
-    @Column(name = "focusTime")
+    @Column(name = "focus_time")
     private int focusTime;
 
     @Column(name = "break_time")
@@ -65,6 +67,9 @@ public class User {
     @Column(name = "sessions_completed")
     private int sessionsCompleted;
 
-    @Column(name = "segementsCompleted")
+    @Column(name = "segments_completed")
     private int segmentsCompleted;
+
+    @Column(name = "segments_not_completed")
+    private int segmentsNotCompleted;
 }
